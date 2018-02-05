@@ -1,0 +1,21 @@
+- hosts: all
+  gather_facts: false
+  raw: "apt-get -y -q install python"
+  become: true
+  retries: 10
+  delay: 20
+
+- hosts: controller
+  roles: 
+    - common
+    - controller
+
+- hosts: etcd
+  roles:
+    - common
+    - etcd
+
+- hosts: worker
+  roles:
+    - common
+    - worker
