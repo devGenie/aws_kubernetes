@@ -9,6 +9,7 @@
             "access_key": "{{user `aws_access_key`}}",
             "secret_key": "{{user `aws_secret_key`}}",
             "region": "us-east-2",
+            "source_ami": "ami-2581aa40",
             "instance_type": "t2.micro",
             "ssh_username": "ubuntu",
             "ami_name": "etcd-{{timestamp}}"
