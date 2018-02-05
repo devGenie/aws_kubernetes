@@ -1,0 +1,41 @@
+- name: Create etcd config dir
+  file: path=/etc/etcd state=directory
+  become: true
+
+- name: Download etcd libraries
+  get_url: "https://github.com/coreos/etcd/releases/download/etcd-v3.0.1-linux-amd64.tar.gz"
+    dest: "/usr/local/src"
+  become: true
+
+- name: Unpack etcd libraries
+  unarchive:
+    copy: no
+    src: "/usr/local/src/etcd-v3.0.1.tar.gz"
+    dest: "/usr/local/src/"
+    creates: "/usr/local/src/etcd-v3.0.1/etcd"
+  become: true
+
+- name: copy etcd libraries
+  copy:
+    remote_src: true
+    src: "/usr/local/src/etcd-v3.0.1/{{ item }}"
+    dest: "/usr/bin/"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - etcd
+    - etcdctl
+  become: true 
+
+- name: Create etcd data dir
+  file: path=/var/lib/etcd state=directory
+  become: true
+
+- name: Add etcd systemd unit
+  template:
+    src: etcd.sercice.j2
+    dest: /etc/systemd/system/etcd.service
+    mode: 700
+  become: true
+
