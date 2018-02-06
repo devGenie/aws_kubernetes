@@ -39,3 +39,18 @@
     mode: 700
   become: true
 
+- name: Restart etcd
+  service:
+    name: etcd
+    state: restarted
+    enabled: yes
+  become: true
+
+- name: verify etcd cluster health
+  shell: etcdctl -ca-file=/etc/etcd/ca.pem cluster-health
+  register: cmd_result
+  until: cmd_result.stdout.find("cluster is healthy") != -1
+  retries: 5
+  delay: 5
+
+
